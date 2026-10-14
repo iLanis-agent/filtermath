@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filter math - calculators</title>
+<style>
+  :root { --accent: #343a40; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: #f4f6f8; color: #24282c; line-height: 1.55; }
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 20px 64px; }
+  h1 { font-size: 2rem; margin: 0 0 8px; color: var(--accent); }
+  .lede { margin: 0 0 14px; max-width: 640px; }
+  .note { background: #fff; border: 1px solid #d8dfe6; border-left: 4px solid var(--accent); border-radius: 6px; padding: 12px 16px; font-size: 0.9rem; margin: 0 0 28px; max-width: 720px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  section { background: #fff; border: 1px solid #d8dfe6; border-radius: 8px; padding: 20px 22px; }
+  h2 { font-size: 1.15rem; margin: 0 0 6px; }
+  .hint { font-size: 0.9rem; color: #727e88; margin: 0 0 14px; }
+  label { display: block; font-size: 0.9rem; margin: 10px 0 3px; }
+  input { width: 100%; padding: 8px 10px; font-size: 1rem; border: 1px solid #b3bfc9; border-radius: 5px; font-family: inherit; }
+  button { margin-top: 16px; width: 100%; padding: 11px; background: var(--accent); color: #fff; border: 0; border-radius: 6px; font-size: 1rem; cursor: pointer; font-family: inherit; }
+  button:hover { filter: brightness(1.08); }
+  .out { margin-top: 14px; font-size: 1rem; min-height: 1.4em; }
+  .out.err { color: #a32222; }
+  footer { max-width: 1100px; margin: 0 auto; padding: 0 20px 40px; font-size: 0.85rem; color: #98a2ab; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Filter math</h1>
+  <p class="lede">The sticker names the months, the gallons name the truth, and the bottle names the price. Exact arithmetic, every borrowed number labeled.</p>
+  <div class="note">Illustrative planning arithmetic only. Certifications name what a filter reduces: look for the NSF/ANSI listing on the cartridge, not the box art. A filter that runs slow, smells or tastes off is done regardless of the calendar.</div>
+  <div class="grid">
+    <section>
+      <h2>Life plan</h2>
+      <p class="hint">The gallons name the truth.</p>
+      <label for="l-g">Filter rating (gallons)</label>
+      <input id="l-g" type="number" value="40" min="0" step="5">
+      <label for="l-d">Your draw (gallons a day)</label>
+      <input id="l-d" type="number" value="2" min="0" step="0.1">
+      <button id="l-go">Date the filter</button>
+      <div class="out" id="l-out"></div>
+    </section>
+    <section>
+      <h2>Cost plan</h2>
+      <p class="hint">The bottle names the price.</p>
+      <label for="c-p">Cartridge price ($)</label>
+      <input id="c-p" type="number" value="8" min="0" step="0.5">
+      <label for="c-g">Filter rating (gallons)</label>
+      <input id="c-g" type="number" value="40" min="0" step="5">
+      <label for="c-b">Bottled water ($ per gallon)</label>
+      <input id="c-b" type="number" value="1.2" min="0" step="0.05">
+      <button id="c-go">Price the gallon</button>
+      <div class="out" id="c-out"></div>
+    </section>
+    <section>
+      <h2>Refill plan</h2>
+      <p class="hint">The refills name the fit.</p>
+      <label for="r-d">Your draw (gallons a day)</label>
+      <input id="r-d" type="number" value="2.5" min="0" step="0.1">
+      <label for="r-c">Pitcher size (cups)</label>
+      <input id="r-c" type="number" value="10" min="0" step="1">
+      <button id="r-go">Count the trips</button>
+      <div class="out" id="r-out"></div>
+    </section>
+  </div>
+</main>
+<footer>Built by the app factory. <a href="index.html">About</a> &middot; <a href="https://github.com/iLanis-agent/filtermath">Source</a></footer>
+<script src="engine.js"></script>
+<script>
+function num(id){ return parseFloat(document.getElementById(id).value); }
+function show(id, r, render){
+  var el = document.getElementById(id);
+  if (r.error) { el.textContent = r.error; el.classList.add('err'); }
+  else { el.textContent = render(r); el.classList.remove('err'); }
+}
+document.getElementById('l-go').addEventListener('click', function(){
+  var a=[num('l-g'),num('l-d')];
+  show('l-out', FilterMath.lifePlan.apply(null,a), function(r){ return FilterMath.renderLife.apply(null,[r].concat(a)); });
+});
+document.getElementById('c-go').addEventListener('click', function(){
+  var a=[num('c-p'),num('c-g'),num('c-b')];
+  show('c-out', FilterMath.costPlan.apply(null,a), function(r){ return FilterMath.renderCost.apply(null,[r].concat(a)); });
+});
+document.getElementById('r-go').addEventListener('click', function(){
+  var a=[num('r-d'),num('r-c')];
+  show('r-out', FilterMath.refillPlan.apply(null,a), function(r){ return FilterMath.renderRefill.apply(null,[r].concat(a)); });
+});
+</script>
+</body>
+</html>
